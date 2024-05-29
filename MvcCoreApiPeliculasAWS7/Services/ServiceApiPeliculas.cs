@@ -7,13 +7,13 @@ namespace MvcCoreApiPeliculasAWS7.Services
     public class ServiceApiPeliculas
     {
         private string UrlApi;
-        private MediaTypeWithQualityHeaderValue header;
+        private MediaTypeWithQualityHeaderValue Header;
 
         public ServiceApiPeliculas(IConfiguration configuration)
         {
             this.UrlApi = configuration.GetValue<string>
                 ("ApiUrls:ApiPeliculasAWS");
-            this.header = new MediaTypeWithQualityHeaderValue
+            this.Header = new MediaTypeWithQualityHeaderValue
                 ("application/json");
         }
 
@@ -22,7 +22,7 @@ namespace MvcCoreApiPeliculasAWS7.Services
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.header);
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
                 HttpResponseMessage response =
                     await client.GetAsync(this.UrlApi + request);
                 if (response.IsSuccessStatusCode)
@@ -40,27 +40,25 @@ namespace MvcCoreApiPeliculasAWS7.Services
         public async Task<List<Pelicula>> GetPeliculasAsync()
         {
             string request = "api/peliculas";
-            List<Pelicula> data =
+            List<Pelicula> peliculas =
                 await this.CallApiAsync<List<Pelicula>>(request);
-            return data;
+            return peliculas;
         }
 
-        public async Task<List<Pelicula>> 
-            GetPeliculasActoresAsync(string actor)
+        public async Task<List<Pelicula>> FindPeliculasActoresAsync(string actor)
         {
-            string request = "api/peliculas/find/" + actor;
-            List<Pelicula> data =
+            string request = "api/peliculas/findpeliculas/" + actor;
+            List<Pelicula> peliculas =
                 await this.CallApiAsync<List<Pelicula>>(request);
-            return data;
+            return peliculas;
         }
 
-        public async Task<Pelicula> 
-            FindPelicula(int id)
+        public async Task<Pelicula> FindPeliculaAsync(int id)
         {
             string request = "api/peliculas/" + id;
-            Pelicula data =
+            Pelicula pelicula =
                 await this.CallApiAsync<Pelicula>(request);
-            return data;
+            return pelicula;
         }
 
         public async Task CreatePeliculaAsync(Pelicula pelicula)
@@ -69,13 +67,13 @@ namespace MvcCoreApiPeliculasAWS7.Services
             {
                 string request = "api/peliculas";
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.header);
-                string json = JsonConvert.SerializeObject(pelicula);
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string json =
+                    JsonConvert.SerializeObject(pelicula);
                 StringContent content =
-                    new StringContent(json, this.header);
+                    new StringContent(json, this.Header);
                 HttpResponseMessage response =
-                    await client.PostAsync(this.UrlApi + request
-                    , content);
+                    await client.PostAsync(this.UrlApi + request, content);
             }
         }
 
@@ -85,23 +83,24 @@ namespace MvcCoreApiPeliculasAWS7.Services
             {
                 string request = "api/peliculas";
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.header);
-                string json = JsonConvert.SerializeObject(pelicula);
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string json =
+                    JsonConvert.SerializeObject(pelicula);
                 StringContent content =
-                    new StringContent(json, this.header);
+                    new StringContent(json, this.Header);
                 HttpResponseMessage response =
-                    await client.PutAsync(this.UrlApi + request
-                    , content);
+                    await client.PutAsync(this.UrlApi + request, content);
             }
         }
 
-        public async Task DeletePeliculaAsync(int idpelicula)
+
+        public async Task DeletePeliculaAsync(int id)
         {
             using (HttpClient client = new HttpClient())
             {
-                string request = "api/peliculas/" + idpelicula;
+                string request = "api/peliculas/" + id;
                 client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.header);
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
                 HttpResponseMessage response =
                     await client.DeleteAsync(this.UrlApi + request);
             }
