@@ -1,9 +1,5 @@
 ﻿@model Pelicula
 
-@{
-    string UrlBuckect = configuration.GetValue<string>("AWS:S3BucketURL");
-}
-
 
 <p>
     <a asp-controller="Peliculas"
@@ -11,7 +7,7 @@
 </p>
 
 <div class="card" style="width: 18rem;">
-    <img src="@UrlBuckect@Model.Foto" class="card-img-top" alt="...">
+    <img src="@keysModel.BucketUrl@Model.Foto" class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title">@Model.Titulo</h5>
         <p class="card-text">@Model.Genero</p>
